@@ -4,9 +4,10 @@
   "private": true,
   "main": "server.js",
   "scripts": {
-    "build": "node scripts/build-public.js",
     "start": "node server.js",
-    "dev": "node server.js"
+    "dev": "node server.js",
+    "cloudflare:dev": "npx --yes wrangler dev",
+    "cloudflare:deploy": "npx --yes wrangler deploy"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.95.3",

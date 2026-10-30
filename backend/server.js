@@ -1,18 +1,19 @@
 const path = require('path');
-require('dotenv').config({ path: path.join(__dirname, '.env') });
+if (!globalThis.__BSI_CONFIG__) require('dotenv').config({ path: path.join(__dirname, '.env') });
 const express = require('express');
 const cors = require('cors');
 const { createClient } = require('@supabase/supabase-js');
 
 const app = express();
-const PORT = process.env.PORT || 3001;
-const supabase = process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY
-  ? createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY, { auth: { autoRefreshToken: false, persistSession: false } }) : null;
+const config = globalThis.__BSI_CONFIG__ || process.env;
+const PORT = config.PORT || 3001;
+const supabase = config.SUPABASE_URL && config.SUPABASE_SERVICE_ROLE_KEY
+  ? createClient(config.SUPABASE_URL, config.SUPABASE_SERVICE_ROLE_KEY, { auth: { autoRefreshToken: false, persistSession: false } }) : null;
 const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
 app.use(cors()); app.use(express.json({ limit: '3mb' }));
 const frontendDir = path.join(__dirname, '..', 'frontend');
-if (!process.env.VERCEL) {
+if (!config.CLOUDFLARE_WORKERS) {
   app.get('/', (req, res) => res.sendFile(path.join(frontendDir, 'home.html')));
   app.use(express.static(frontendDir));
 }
@@ -84,7 +85,7 @@ function summarise(rows, period) {
 }
 
 app.get('/api/health', (req, res) => res.json({ status: 'ok', database: supabase ? 'supabase' : 'not-configured' }));
-app.get('/api/config/public', (req, res) => res.json({ supabaseUrl: process.env.SUPABASE_URL || '', publishableKey: process.env.SUPABASE_PUBLISHABLE_KEY || process.env.SUPABASE_ANON_KEY || '' }));
+app.get('/api/config/public', (req, res) => res.json({ supabaseUrl: config.SUPABASE_URL || '', publishableKey: config.SUPABASE_PUBLISHABLE_KEY || config.SUPABASE_ANON_KEY || '' }));
 app.post('/api/auth/register', ready, async (req, res) => {
   const ownerEmail = email(req.body?.email), password = String(req.body?.password || ''), name = String(req.body?.businessName || '').trim();
   if (!/^\S+@\S+\.\S+$/.test(ownerEmail) || password.length < 8 || !name) return res.status(400).json({ error: 'Enter a valid email, an 8-character password, and a business name.' });
@@ -280,6 +281,6 @@ app.get('/api/products', (req, res) => res.json({ products: [] }));
 app.get('/api/market-intelligence', (req, res) => res.json({ disclaimer: 'Comparison data must be anonymised and permission-controlled before release.', investors: [], shareholders: [], competitors: [], leaders: [] }));
 app.get('/api/billing', (req, res) => res.json({ plan: { name: 'SME Intelligence Pro', amount: 10, currency: 'USD', interval: 'month' }, checkoutEnabled: false, mpesaEnabled: false }));
 app.use('/api', (req, res) => res.status(404).json({ error: `API route ${req.method} ${req.path} was not found. Restart the backend to load the latest routes.` }));
-if (require.main === module) app.listen(PORT, () => console.log(`SME Intelligence Platform running at http://localhost:${PORT}`));
+if (require.main === module && !config.CLOUDFLARE_WORKERS) app.listen(PORT, () => console.log(`SME Intelligence Platform running at http://localhost:${PORT}`));
 
 module.exports = app;
