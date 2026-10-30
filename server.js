@@ -1,4 +1,8 @@
-const app = require('./backend/server');
+const express = require('express');
+const backendApp = require('./backend/server');
+const app = express();
+
+app.use(backendApp);
 
 if (require.main === module && !process.env.VERCEL) {
   const port = process.env.PORT || 3001;
