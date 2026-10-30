@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Explore business profiles and their published sales and profit reports.">
+  <title>Business Directory | BSI</title>
+  <link rel="icon" type="image/svg+xml" href="assets/bsi-logo.svg?v=5">
+  <link rel="stylesheet" href="style.css?v=8">
+</head>
+<body class="public-home">
+  <header class="public-topbar">
+    <a class="public-brand" href="home.html"><img src="assets/bsi-logo.svg?v=5" alt=""><span>BUSINESS SME<br>INTELLIGENCE</span></a>
+    <nav class="public-links" aria-label="Main navigation"><a href="#directory">Business directory</a><a href="index.html">Business analytics</a><a href="#how-it-works">About</a></nav>
+    <label class="market-currency" for="marketCurrency">Currency<select id="marketCurrency" aria-label="Display currency"><option>USD</option><option>KES</option><option>EUR</option><option>GBP</option><option>UGX</option><option>TZS</option><option>ZAR</option><option>NGN</option><option>INR</option></select></label>
+    <div id="guestActions" class="public-actions"><button class="outline-button" id="signInButton" type="button">Sign in</button><button class="primary-button" id="createAccountButton" type="button">Create account</button></div>
+    <div id="accountActions" class="public-actions" hidden><span id="accountGreeting" class="account-greeting"></span><a id="joinBusinessLink" class="outline-button" href="index.html">|Open business Account|</a><button id="businessRequests" class="outline-button" type="button" hidden>Incoming share requests</button><button id="viewBusinesses" class="outline-button" type="button" hidden>View businesses</button><button id="myRequests" class="outline-button" type="button" hidden>My share requests</button><button id="signOut" class="plain-button" type="button">Sign out</button></div>
+  </header>
+
+  <main class="public-main">
+    <section class="public-hero">
+      <div class="hero-copy"><p class="kicker">|Business Performance|</p><h1>See the businesses<br>behind the numbers.</h1><p>|Explore business profiles|<br>|Analyse your Business Analytics|<br>|Analyse Other Business reported sales and profit trends|<br>|Compete with other similar Businessess|.</p><a class="primary-button" href="#directory">Explore businesses</a></div>
+      <div class="hero-panel"><div class="hero-mark"><img src="assets/bsi-logo.svg?v=5" alt=""></div><p>|Clear Clean Critical Business Reports|.<br><strong>Better Conversations.</strong></p><small>|Original analytics in Realtime|</small></div>
+    </section>
+
+    <section id="directory" class="directory-section">
+      <div class="directory-heading"><div><p class="kicker"> |Business Profiles|</p><h2>Explore businesses</h2><p>View sales reports and recent profit or loss status.</p></div><button id="refreshDirectory" class="outline-button" type="button">Refresh</button></div>
+      <p id="directoryMessage" class="directory-message" aria-live="polite">Loading public business profiles…</p>
+      <div id="businessGrid" class="business-directory-grid"></div>
+    </section>
+
+    <section id="how-it-works" class="public-note"><div><p class="kicker">FOR BUSINESS OWNERS</p><h2>Choose what you publish.</h2><p>Business owners can opt into the directory from their profile settings and provide a share price and quantity for investor requests.</p><a class="text-link" href="index.html">Open business analytics →</a></div><div><p class="kicker">FOR INVESTORS</p><h2>Review the report first.</h2><p>Investor accounts can view public business profiles and submit a request to buy shares when a business lists them.</p><small>Share requests are non-binding. No payment is collected and shares are not transferred through this site.</small></div></section>
+  </main>
+
+  <footer class="public-footer"><span>Business SME Intelligence</span><span>Published reports are supplied by the businesses shown.</span></footer>
+
+  <dialog id="authDialog" class="public-dialog" aria-labelledby="authTitle"><form id="authForm" method="dialog"><button class="dialog-close" id="closeAuth" type="button" aria-label="Close">×</button><img class="dialog-logo" src="assets/bsi-logo.svg?v=5" alt=""><p class="kicker">ACCOUNT ACCESS</p><h2 id="authTitle">Sign in</h2><p id="authSubtitle" class="dialog-subtitle">Sign in to continue. Your account type will be recognized automatically.</p>
+    <div class="auth-mode-tabs" role="group" aria-label="Sign in or create account"><button id="modeSignIn" type="button" class="selected">Sign in</button><button id="modeSignUp" type="button">Create account</button></div>
+    <label id="businessNameField" class="home-auth-field" hidden>Business name<input id="businessName" maxlength="80" autocomplete="organization" placeholder="Your business name"></label>
+    <label>Email<input id="authEmail" type="email" required autocomplete="username" placeholder="you@example.com"></label>
+    <label>Password<input id="authPassword" type="password" required minlength="8" autocomplete="current-password" placeholder="At least 8 characters"></label>
+    <button id="submitAuth" class="primary-button" type="submit">Sign in</button><div class="google-divider"><span>or</span></div><button id="googleAuthButton" class="google-button" type="button"><img src="assets/google-g.svg" alt="" aria-hidden="true"><span>Continue with Google</span></button><p id="authMessage" class="form-message" aria-live="polite"></p>
+  </form></dialog>
+
+  <dialog id="businessDialog" class="business-dialog" aria-labelledby="businessDialogTitle"><button class="dialog-close" id="closeBusiness" type="button" aria-label="Close">×</button><div id="businessDetail"></div></dialog>
+  <dialog id="requestsPanel" class="business-dialog" aria-labelledby="requestsTitle"><button id="closeRequests" class="dialog-close" type="button" aria-label="Close">×</button><p class="kicker">INVESTOR ACCOUNT</p><h2 id="requestsTitle">My share requests</h2><div id="requestList"></div></dialog>
+  <dialog id="businessRequestsPanel" class="business-dialog" aria-labelledby="businessRequestsTitle"><button id="closeBusinessRequests" class="dialog-close" type="button" aria-label="Close">×</button><p class="kicker">BUSINESS WORKSPACE</p><h2 id="businessRequestsTitle">Incoming share requests</h2><div id="businessRequestList"></div></dialog>
+  <dialog id="shareChatDialog" class="business-dialog share-chat-dialog" aria-labelledby="shareChatTitle"><button id="closeShareChat" class="dialog-close" type="button" aria-label="Close">×</button><p class="kicker">SHARE REQUEST CONVERSATION</p><h2 id="shareChatTitle">Chat</h2><div id="shareChatMessages" class="share-chat-messages" aria-live="polite"></div><form id="shareChatForm" class="share-chat-form"><label class="visually-hidden" for="shareChatInput">Message</label><textarea id="shareChatInput" maxlength="2000" rows="3" placeholder="Write a message…" required></textarea><button class="primary-button" type="submit">Send message</button></form><p id="shareChatNotice" class="directory-message" aria-live="polite"></p></dialog>
+  <script src="config.js?v=2"></script><script src="home.js?v=18"></script>
+</body>
+</html>
+
+

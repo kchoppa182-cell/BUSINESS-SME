@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Performance analytics | SME Intelligence</title>
+  <link rel="icon" href="assets/bsi-logo.svg?v=5">
+  <script>document.documentElement.classList.add('auth-pending');</script><link rel="stylesheet" href="style.css?v=8">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body data-page="analytics">
+  <aside class="sidebar"><div class="sidebar-top"><a class="logo" href="index.html"><img src="assets/bsi-logo.svg?v=5" alt="BSI"><span>BUSINESS SME<br>INTELLIGENCE</span></a><button class="menu-exit" type="button">x</button></div><div class="company"><b>SME</b><div><strong>Your Business</strong><small>Business workspace</small></div></div><nav><a href="home.html">Business directory</a><a data-page="dashboard" href="index.html">Dashboard</a><a data-page="analytics" href="analytics.html">Analytics</a><a data-page="records" href="records.html">Add records</a><a data-page="profile" href="profile.html">Business profile</a><a data-page="billing" href="billing.html">Billing</a><a data-page="connections" href="connections.html">Data connections</a></nav><button id="signOut" class="plain-button">Sign out</button></aside>
+  <div class="menu-overlay"></div>
+  <main>
+    <header><div class="header-navigation"><button class="back-button" type="button">Back</button><button class="menu-button" type="button" aria-expanded="false"><span></span><span></span><span></span></button></div><div><p class="kicker">BUSINESS PERFORMANCE</p><h1>Analytics</h1></div><div class="header-tools"><label class="currency-control" for="currencySelect">Currency<select id="currencySelect"><option>USD</option><option>KES</option><option>EUR</option><option>GBP</option><option>UGX</option><option>TZS</option><option>ZAR</option><option>NGN</option><option>INR</option></select></label></div></header>
+    <section class="content">
+      <div class="analytics-heading"><div><h2>Business performance</h2><p>See revenue, capital deployed, and net profit in one clear view.</p></div><label for="analyticsPeriod">Period<select id="analyticsPeriod"><option value="month">This year</option><option value="week">This month</option><option value="year">Last 6 years</option></select></label></div>
+      <div class="analytics-summary"><article><small>Sales</small><strong id="analyticsSales">—</strong></article><article><small>Capital used</small><strong id="analyticsCapital">—</strong></article><article><small>Net output</small><strong id="analyticsNetOutput">—</strong></article></div>
+      <div class="analytics-grid"><article class="panel"><div class="panel-title"><div><h3>Revenue and capital</h3><p>Compare income with the resources used to operate the business.</p></div></div><div class="canvas-holder"><canvas id="salesCapitalChart"></canvas></div></article><article class="panel"><div class="panel-title"><div><h3>Net profit</h3><p>Operating output after capital deployed.</p></div></div><div class="canvas-holder"><canvas id="netOutputChart"></canvas></div></article></div>
+      <p id="analyticsMessage" class="form-message" aria-live="polite"></p>
+    </section>
+  </main>
+  <script src="config.js?v=2"></script><script src="page.js?v=7"></script>
+</body>
+</html>
+
+
+

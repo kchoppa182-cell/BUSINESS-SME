@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BUSINESS SME INTELLIGENCE (BSI)</title>
+  <link rel="icon" type="image/svg+xml" href="assets/bsi-logo.svg?v=5">
+  <link rel="stylesheet" href="style.css?v=8">
+  <style>
+    .header-navigation { display: flex; align-items: center; gap: 8px; }
+    .network-canvas { position: fixed; inset: 0; z-index: 0; width: 100%; height: 100%; pointer-events: none; background: radial-gradient(circle at 75% 12%, #d8efff 0, transparent 34%), radial-gradient(circle at 20% 90%, #e3e0ff 0, transparent 37%), #edf4fb; }
+    .sidebar { position: fixed; z-index: 5; }
+    main { position: fixed; inset: 0 0 0 248px; z-index: 1; margin: 0; }
+    body { background: transparent; }
+    body { height: 100vh; overflow: hidden; }
+    main { height: 100vh; overflow-y: auto; overflow-x: hidden; scroll-behavior: smooth; }
+    header { position: sticky; top: 0; z-index: 3; display: grid; grid-template-columns: 1fr minmax(260px, auto) 1fr; gap: 20px; min-height: 90px; box-shadow: 0 1px 0 rgba(23, 32, 45, .04); }
+    header > div:nth-child(2) { grid-column: 2; text-align: center; }
+    .header-tools { justify-self: end; }
+    header h1 { letter-spacing: -.35px; }
+    .content { padding-top: 30px; }
+    .welcome { padding: 4px 0 20px; border-bottom: 1px solid rgba(205, 215, 227, .72); }
+    .metrics article, .panel, .form-section, .connection-section { box-shadow: 0 8px 22px rgba(32, 55, 80, .045); }
+    #dashboard, #analytics, #records, #connections { scroll-margin-top: 112px; }
+    .sidebar nav a { transition: background .2s, color .2s; }
+    .page-view-hidden { display: none !important; }
+    .sidebar-top { display: flex; align-items: center; justify-content: space-between; }
+    .logo img { width: 31px; height: 31px; flex: 0 0 auto; }
+    .logo > span { display: block; width: auto; height: auto; background: transparent; border-radius: 0; font-size: 12px; line-height: 1.1; }
+    /* BSI monochrome visual system */
+    :root { --ink: #111; --muted: #5f5f5f; --line: #dedede; --blue: #111; --navy: #111; --pale: #f5f5f5; --green: #111; }
+    body, .network-canvas { background: #f5f5f5 !important; }
+    .network-canvas { filter: grayscale(1) contrast(1.12); }
+    .sidebar { background: #050505; color: #fff; border-right: 1px solid #222; }
+    .company { background: #111; border-color: #444; }.company>b { background: #fff; color: #111; }
+    nav a,.plain-button { color: #e8e8e8; } nav a.active,nav a:hover { background: #fff; color: #000; }
+    .plain-button { border-top-color: #444; }.menu-exit { border-color: #777; color: #fff; }
+    header,.metrics article,.panel,.form-section,.connection-section,.profile-card,.billing-card { background: rgba(255,255,255,.96) !important; border-color: #d9d9d9 !important; box-shadow: 0 8px 22px rgba(0,0,0,.06) !important; }
+    .primary-button,.payment-icon,.payment-icon.mpesa { background: #050505 !important; color: #fff !important; }
+    .outline-button,.back-button,.menu-button { border-color: #777 !important; color: #111 !important; background: #fff !important; }
+    .periods .selected,.payment-method.selected { color: #000 !important; border-color: #111 !important; background: #eee !important; box-shadow: 0 0 0 1px #111 !important; }
+    .payment-method { border-color: #bbb; }.count-badge,.connection-icon,.market-icon { background: #eee !important; color: #111 !important; }
+    .insight-panel,.insight { background: #111 !important; border-color: #111 !important; color: #fff !important; }.insight { border-left-color: #fff !important; }
+    .price strong,.panel-title>strong,.profile-card h3,.section-title h2 { color: #111 !important; }
+    .market-section { margin-bottom: 18px; }
+    .custom-period { display: flex; justify-content: flex-end; align-items: end; gap: 7px; margin-top: 8px; }
+    .custom-period label { display: grid; gap: 3px; color: #637387; font-size: 10px; }
+    .custom-period input { width: 126px; padding: 5px; font-size: 10px; }
+    .section-title { display: flex; align-items: flex-end; justify-content: space-between; margin: 0 0 14px; }
+    .section-title h2 { margin: 0 0 5px; font: 700 20px Manrope, sans-serif; color: #17202d; }
+    .section-title p:not(.kicker) { margin: 0; color: #718096; font-size: 12px; }
+    .market-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+    .market-grid .panel { min-height: 184px; padding: 16px; }
+    .count-badge { background: #e4f0ff; color: #1769e0; border-radius: 12px; padding: 3px 8px; font-size: 11px; font-weight: 700; }
+    .market-list { margin-top: 13px; display: grid; gap: 9px; }
+    .market-item { display: flex; align-items: center; gap: 8px; font-size: 11px; line-height: 1.35; }
+    .market-icon { width: 27px; height: 27px; border-radius: 50%; background: #e5f1ff; color: #1769e0; display: grid; place-items: center; font-weight: 700; flex: 0 0 auto; }
+    .market-item strong, .market-item small { display: block; }
+    .market-item strong { color: #24384b; font-size: 11px; }
+    .market-item small { color: #7d8c9b; font-size: 10px; }
+    .leader { border-left: 3px solid #f2ae35; padding-left: 8px; }
+    .leader strong { color: #17202d; }
+    .profile-section { margin-top: 18px; scroll-margin-top: 112px; }
+    .profile-form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+    .profile-card { background: rgba(255,255,255,.96); border: 1px solid #e7ebf0; border-radius: 10px; padding: 20px; box-shadow: 0 8px 22px rgba(32,55,80,.045); display: grid; gap: 13px; }
+    .profile-card h3 { margin: 0; font: 700 15px Manrope, sans-serif; color: #17202d; }
+    .profile-identity { grid-row: span 2; }
+    .photo-editor { display: flex; align-items: center; gap: 13px; padding-bottom: 7px; border-bottom: 1px solid #edf0f4; }
+    .photo-editor img { width: 66px; height: 66px; border-radius: 50%; object-fit: cover; background: #dcebfa; border: 2px solid #fff; box-shadow: 0 2px 8px rgba(23,105,224,.2); }
+    .photo-editor label { color: #1769e0; cursor: pointer; font-size: 12px; }
+    .photo-editor input { display: none; }
+    textarea { width: 100%; resize: vertical; min-height: 98px; border: 1px solid #cfd8e2; border-radius: 6px; padding: 10px; font: 13px 'DM Sans', sans-serif; outline-color: #448cf0; }
+    .profile-card-header { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .repeat-fields { display: grid; gap: 8px; }
+    .repeat-row { display: grid; grid-template-columns: 1fr 1fr auto; gap: 8px; align-items: end; }
+    .repeat-row.team-row { grid-template-columns: 1fr 1fr 1fr auto; }
+    .remove-row { border: 1px solid #e7c4c8; color: #b53d49; background: #fff; border-radius: 6px; width: 34px; height: 35px; cursor: pointer; }
+    .profile-save { grid-column: 1 / -1; display: flex; align-items: center; justify-content: flex-end; gap: 16px; }
+    .profile-save .form-message { margin: 0; flex: 1; }
+    .billing-section { max-width: 620px; margin: 8px auto 0; scroll-margin-top: 112px; }
+    .billing-card { background: rgba(255,255,255,.97); border: 1px solid #d9e4f0; border-radius: 14px; padding: 32px; box-shadow: 0 16px 40px rgba(32,55,80,.09); }
+    .billing-card h2 { margin: 0 0 8px; font: 700 25px Manrope, sans-serif; }
+    .billing-description { color: #718096; line-height: 1.55; }
+    .price { display: flex; align-items: baseline; gap: 8px; margin: 24px 0 18px; }
+    .price strong { color: #1769e0; font: 800 43px Manrope, sans-serif; letter-spacing: -1px; }
+    .price span { color: #718096; font-size: 13px; }
+    .billing-card ul { margin: 0 0 24px; padding-left: 20px; color: #435569; line-height: 2; font-size: 13px; }
+    .payment-methods { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 18px 0 12px; }
+    .payment-method { display: flex; align-items: center; gap: 9px; text-align: left; border: 1px solid #d4dde7; background: #fff; border-radius: 8px; padding: 10px; cursor: pointer; color: #24384b; }
+    .payment-method.selected { border-color: #1769e0; background: #f1f7ff; box-shadow: 0 0 0 2px #1769e022; }
+    .payment-method strong, .payment-method small { display: block; }
+    .indicator-bar { display: flex; flex-wrap: wrap; gap: 6px; margin: 16px 0 8px; padding-bottom: 10px; border-bottom: 1px solid #e7ebf0; }
+    .indicator-button { border: 1px solid #bbb; background: #fff; color: #222; padding: 6px 9px; border-radius: 4px; font-size: 11px; cursor: pointer; }
+    .indicator-button.selected { background: #111; color: #fff; border-color: #111; }
+    .indicator-description { color: #666; margin: 0; font-size: 11px; }
+    .payment-method strong { font-size: 11px; }.payment-method small { color: #718096; font-size: 10px; margin-top: 2px; }
+    .payment-icon { display: grid; place-items: center; min-width: 35px; height: 27px; border-radius: 5px; background: #173957; color: #fff; font-size: 8px; font-weight: 700; }
+    .payment-icon.mpesa { background: #35a948; font-size: 15px; }.mpesa-phone { display: none; margin: 0 0 12px; }.mpesa-phone.visible { display: grid; }
+    .auth-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; padding: 4px; border-radius: 7px; background: #edf2f7; }
+    .auth-tabs button { border: 0; border-radius: 5px; padding: 8px; background: transparent; color: #637387; cursor: pointer; font-weight: 700; }
+    .auth-tabs button.selected { background: #fff; color: #1769e0; box-shadow: 0 1px 3px #cad5df; }
+    .auth-optional { display: none; }.auth-optional.visible { display: grid; }
+    .auth-divider { display: flex; align-items: center; gap: 10px; color: #8a98a8; font-size: 11px; }.auth-divider::before,.auth-divider::after { content: ''; height: 1px; background: #e1e7ed; flex: 1; }
+    .social-auth { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }.social-auth .outline-button { padding: 9px; }
+    .menu-exit { display: none; border: 1px solid #146dbb; border-radius: 6px; background: transparent; color: #fff; width: 30px; height: 30px; font-size: 18px; cursor: pointer; }
+    .menu-overlay { display: none; }
+    .header-tools { display: flex; align-items: center; gap: 18px; }
+    .currency-control { display: flex; align-items: center; gap: 6px; color: #637387; font-size: 11px; font-weight: 600; }
+    .currency-control select { width: 142px; padding: 6px 7px; font-size: 11px; }
+    .back-button { border: 1px solid #ccd7e3; border-radius: 6px; background: #fff; color: #31506b; padding: 7px 10px; font: 600 11px 'DM Sans', sans-serif; cursor: pointer; }
+    .back-button:hover { background: #eaf3ff; border-color: #8ebcf4; }
+    .menu-button { width: 35px; height: 32px; border: 1px solid #ccd7e3; border-radius: 6px; background: #fff; padding: 7px 8px; cursor: pointer; }
+    .menu-button span { display: block; height: 2px; margin: 3px 0; border-radius: 2px; background: #31506b; transition: transform .2s, opacity .2s; }
+    .menu-button[aria-expanded="true"] span:nth-child(1) { transform: translateY(5px) rotate(45deg); }
+    .menu-button[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
+    .menu-button[aria-expanded="true"] span:nth-child(3) { transform: translateY(-5px) rotate(-45deg); }
+    @media (max-width: 1100px) { .market-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 730px) { body { overflow: auto; } main { position: relative; inset: auto; margin: 0; height: auto; min-height: 100vh; overflow: visible; } header { display: flex; min-height: 78px; } header > div:nth-child(2) { text-align: left; } .back-button { display: none; } .header-tools { margin-left: auto; } .currency-control { display: none; } .menu-exit { display: block; } .menu-overlay { position: fixed; inset: 0; z-index: 4; background: rgba(16,42,67,.4); } .menu-overlay.visible { display: block; } .market-grid, .profile-form { grid-template-columns: 1fr; } .profile-identity { grid-row: auto; } .repeat-row, .repeat-row.team-row { grid-template-columns: 1fr; } .remove-row { width: 100%; } .profile-save { grid-column: auto; flex-direction: column; align-items: stretch; } .section-title { align-items: flex-start; gap: 10px; flex-direction: column; } .custom-period { justify-content: flex-start; flex-wrap: wrap; } }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="auth-locked">
+  <canvas id="networkCanvas" class="network-canvas" aria-hidden="true"></canvas>
+  <div id="menuOverlay" class="menu-overlay" aria-hidden="true"></div>
+  <aside class="sidebar">
+    <div class="sidebar-top"><a class="logo" href="#dashboard" aria-label="MISTIZEN dashboard"><img class="mistizen-mark" src="assets/bsi-logo.svg?v=5" alt=""><span class="brand-name">MISTIZEN</span></a><button id="menuExit" class="menu-exit" type="button" aria-label="Exit menu">x</button></div>
+    <div class="company"><b>SME</b><div><strong>Your Business</strong><small>Business workspace</small></div></div>
+    <nav>
+      <a href="home.html">Business directory</a>
+      <a class="active" data-page="dashboard" href="index.html">Dashboard</a>
+      <a data-page="analytics" href="analytics.html">Analytics</a>
+      <a data-page="records" href="records.html">Add records</a>
+      <a data-page="profile" href="profile.html">Business profile</a>
+      <a data-page="billing" href="billing.html">Billing</a>
+      <a data-page="connections" href="connections.html">Data connections</a>
+    </nav>
+    <button id="signOut" class="plain-button">Sign out</button>
+  </aside>
+
+  <main>
+    <header>
+      <div class="header-navigation">
+        <button id="backButton" class="back-button" type="button" aria-label="Go back to the previous page">Back</button>
+        <button class="menu-button" type="button" aria-label="Open or close menu" aria-expanded="false"><span></span><span></span><span></span></button>
+      </div>
+      <div><p class="kicker">BUSINESS PERFORMANCE</p><h1>Business overview</h1></div>
+      <div class="header-tools">
+        <label class="currency-control" for="currencySelect">Currency
+          <select id="currencySelect" aria-label="Display currency">
+            <option value="USD">USD - US Dollar</option>
+            <option value="KES">KES - Kenyan Shilling</option>
+            <option value="EUR">EUR - Euro</option>
+            <option value="GBP">GBP - British Pound</option>
+            <option value="UGX">UGX - Ugandan Shilling</option>
+            <option value="TZS">TZS - Tanzanian Shilling</option>
+            <option value="ZAR">ZAR - South African Rand</option>
+            <option value="NGN">NGN - Nigerian Naira</option>
+            <option value="INR">INR - Indian Rupee</option>
+          </select>
+        </label>
+        <div class="status"><i></i><span id="lastUpdated">Preparing data...</span></div>
+      </div>
+    </header>
+
+    <section id="dashboard" class="content">
+      <div class="page-dashboard"><div class="welcome"><div><h2>Make every business decision count.</h2><p>Track sales, investment, output and product performance in one place.</p></div><div><div class="periods"><button data-period="live">24 Hours</button><button data-period="week">4 Weeks</button><button data-period="month" class="selected">12 Months</button><button data-period="year">6 Years</button></div><div class="custom-period"><label>From <input id="periodFrom" type="date"></label><label>To <input id="periodTo" type="date"></label><button id="applyPeriod" type="button" class="outline-button">Apply dates</button></div></div></div>
+      <div class="metrics">
+        <article><p id="revenueLabel">Revenue</p><strong id="revenueValue">$0</strong><small id="revenueSub">Sales in selected period</small></article>
+        <article><p>Capital used</p><strong id="capitalValue">$0</strong><small id="capitalSub">Investment and operating costs in selected period</small></article>
+        <article><p>Net output</p><strong id="profitValue">$0</strong><small id="profitSub">Output minus capital</small></article>
+        <article><p>Products sold</p><strong id="productsValue">0</strong><small id="productsSub">Units sold in selected period</small></article>
+      </div>
+
+      <section id="market" class="market-section">
+        <div class="section-title"><div><p class="kicker">BUSINESS NETWORK</p><h2>Growth opportunities</h2><p>Demo market intelligence. Connect verified sources before making investment decisions.</p></div><button id="refreshMarket" class="outline-button" type="button">Refresh network</button></div>
+        <div class="market-grid">
+          <article class="panel investors-panel"><div class="panel-title"><div><h3>Investors interested in you</h3><p>Incoming share requests</p></div><span id="investorCount" class="count-badge">0</span></div><div id="investorList" class="market-list"></div><a class="text-link" href="home.html?ownerRequests=1">Open requests and chat</a></article>
+          <article class="panel shareholders-panel"><div class="panel-title"><div><h3>Your shareholders</h3><p>Ownership snapshot</p></div></div><div id="shareholderList" class="market-list"></div></article>
+          <article class="panel competitors-panel"><div class="panel-title"><div><h3>Competitor activity</h3><p>Businesses worth monitoring</p></div></div><div id="competitorList" class="market-list"></div></article>
+          <article class="panel leaders-panel"><div class="panel-title"><div><h3>Market leaders</h3><p>Top performance in your category</p></div></div><div id="leaderList" class="market-list"></div></article>
+        </div>
+      </section></div>
+
+      <div id="analytics" class="dashboard-grid page-section" data-page-section="analytics">
+        <article class="panel big-panel"><div class="panel-title"><div><p class="kicker">BUSINESS MONITOR</p><h3 id="monitorTitle">Revenue and capital</h3><p id="monitorSubtitle">How money moves through your business</p></div><button id="refresh" class="outline-button">Refresh</button></div><div class="indicator-bar" role="group" aria-label="Business indicators"><button class="indicator-button selected" data-indicator="revenue">Revenue</button><button class="indicator-button" data-indicator="capital">Capital</button><button class="indicator-button" data-indicator="profit">Profit / loss</button><button class="indicator-button" data-indicator="roi">Net ROI</button><button class="indicator-button" data-indicator="average">Moving average</button><button class="indicator-button" data-indicator="band">Trend band</button></div><p id="indicatorDescription" class="indicator-description">Revenue compared with capital used.</p><div class="canvas-holder"><canvas id="revenueChart"></canvas></div></article>
+        <article class="panel insight-panel"><p class="kicker">AI BUSINESS BRIEF</p><h3>Actionable insights</h3><div id="insights" class="insights"><p>Analysing your records...</p></div></article>
+        <article class="panel"><div class="panel-title"><div><h3>Products at a glance</h3><p>Best performers in this period</p></div></div><div id="productList"></div></article>
+        <article class="panel"><div class="panel-title"><div><h3>Return on capital</h3><p>Output relative to investment</p></div><strong id="roiChartValue">0%</strong></div><div class="short-canvas"><canvas id="roiChart"></canvas></div></article>
+      </div>
+
+      <section id="records" class="form-section page-section" data-page-section="records">
+        <div><p class="kicker">BUSINESS RECORDS</p><h2>Add a new record</h2><p>Update your figures whenever a sale, expense, or stock movement is completed.</p></div>
+        <form id="recordForm">
+          <label>Record date (this determines the dashboard period)<input id="date" type="date" required></label>
+          <label>Sales revenue (<span class="record-currency">USD</span>)<input id="sales" type="number" min="0" step="0.01" placeholder="0.00" required></label>
+          <label>Capital used (<span class="record-currency">USD</span>)<input id="capital" type="number" min="0" step="0.01" placeholder="0.00" required></label>
+          <label>Output earned (<span class="record-currency">USD</span>)<input id="output" type="number" min="0" step="0.01" placeholder="0.00" required></label>
+          <label>Products sold<input id="products" type="number" min="0" step="1" placeholder="0" required></label>
+          <button class="primary-button">Save record</button>
+        </form><p id="formMessage" class="form-message"></p>
+      </section>
+
+      <section id="profile" class="profile-section page-section" data-page-section="profile">
+        <div class="section-title"><div><p class="kicker">BUSINESS PROFILE</p><h2>Present your business professionally</h2><p>Manage the information shown to investors, customers and partners.</p></div><button id="profileSaveTop" class="primary-button" form="profileForm" type="submit">Save profile</button></div>
+        <form id="profileForm" class="profile-form" novalidate>
+          <article class="profile-card profile-identity"><div class="photo-editor"><img id="profilePhotoPreview" alt="Business profile"><label for="profilePhoto">Change photo<input id="profilePhoto" type="file" accept="image/png,image/jpeg,image/webp"></label></div><label>Business name<input id="profileName" maxlength="80" required></label><label>Business bio<textarea id="profileBio" maxlength="500" rows="5" placeholder="Describe your business, products and mission."></textarea></label></article>
+          <article class="profile-card"><h3>Public investor profile</h3><label class="public-listing-control"><input id="publicListing" type="checkbox"><span>Show my business on the public homepage and share its sales report.</span></label><p class="field-hint">Publish your profile for investors to find your business and view its analytics. Set a share price and available quantity to accept investment requests.</p><button id="publishBusiness" class="outline-button" type="button">Publish to investors now</button><p id="publishMessage" class="form-message" aria-live="polite"></p><label>Share price (USD)<input id="sharePrice" type="number" min="0" step="0.01" value="0"></label><label>Shares available to request<input id="sharesAvailable" type="number" min="0" step="1" value="0"></label></article>
+          <article class="profile-card"><h3>Store and social links</h3><label>Online store<input id="storeLink" type="text" placeholder="yourstore.com"></label><label>Instagram<input id="instagramLink" type="text" placeholder="instagram.com/yourbusiness"></label><label>LinkedIn<input id="linkedinLink" type="text" placeholder="linkedin.com/company/yourbusiness"></label><label>Facebook<input id="facebookLink" type="text" placeholder="facebook.com/yourbusiness"></label></article>
+          <article class="profile-card"><div class="profile-card-header"><h3>Awards and recognition</h3><button id="addAward" class="outline-button" type="button">Add award</button></div><div id="awardsFields" class="repeat-fields"></div></article>
+          <article class="profile-card"><div class="profile-card-header"><h3>Organisation team</h3><button id="addTeamMember" class="outline-button" type="button">Add member</button></div><div id="teamFields" class="repeat-fields"></div></article>
+          <div class="profile-save"><p id="profileMessage" class="form-message"></p><button class="primary-button" type="submit">Save business profile</button></div>
+        </form>
+      </section>
+
+      <section id="billing" class="billing-section page-section" data-page-section="billing">
+        <div class="billing-card"><p class="kicker">SUBSCRIPTION</p><h2>BUSINESS Pro</h2><p class="billing-description">One simple plan for your business analytics workspace, profile and data connections.</p><div class="price"><strong>$10</strong><span>USD / month</span></div><ul><li>Business analytics dashboard</li><li>Business profile and team workspace</li><li>Data records and connections</li><li>Monthly subscription, cancel through your payment provider</li></ul><div class="payment-methods" role="radiogroup" aria-label="Payment method"><button class="payment-method selected" type="button" data-payment-method="card" aria-pressed="true"><span class="payment-icon">CARD</span><span><strong>Visa, Mastercard or DTB card</strong><small>Secure card checkout</small></span></button><button class="payment-method" type="button" data-payment-method="mpesa" aria-pressed="false"><span class="payment-icon mpesa">M</span><span><strong>M-Pesa</strong><small>Pay from your M-Pesa wallet</small></span></button></div><label id="mpesaPhoneLabel" class="mpesa-phone">M-Pesa phone number<input id="mpesaPhone" type="tel" inputmode="tel" placeholder="e.g. 254712345678"></label><button id="startSubscription" class="primary-button" type="button">Subscribe for $10/month</button><p id="billingMessage" class="form-message">Checking billing availability...</p></div>
+      </section>
+
+      <section id="connections" class="connection-section page-section" data-page-section="connections"><div><p class="kicker">YOUR DATA</p><h2>Connect a business system</h2><p>Use an API endpoint to keep records in sync with your POS, accounting software, or internal server.</p></div><div class="connection"><div class="connection-icon">API</div><div><strong>Custom server connection</strong><small id="connectionStatus">Not connected</small></div><button id="openConnection" class="outline-button">Connect</button></div></section>
+    </section>
+  </main>
+
+  <dialog id="connectionDialog"><form id="connectionForm" method="dialog"><button id="closeConnection" class="close" type="button" aria-label="Close connection window">x</button><p class="kicker">DATA CONNECTION</p><h2>Connect your server</h2><p>Save an HTTPS endpoint and choose when the dashboard should refresh.</p><label>Server API URL<input id="serverUrl" type="url" placeholder="https://api.example.com/business-data" required></label><label>Update interval<select id="interval"><option value="hourly">Every hour</option><option value="weekly">Every week</option><option value="monthly">Every month</option><option value="yearly">Every year</option></select></label><button class="primary-button">Save connection</button></form></dialog>
+  <dialog id="loginDialog" aria-labelledby="authTitle"><form id="loginForm" method="dialog"><div class="login-logo"><img src="assets/bsi-logo.svg?v=5" alt="Business SME Intelligence"></div><p class="kicker">BUSINESS SME INTELLIGENCE</p><h2 id="authTitle">Welcome back</h2><p id="authDescription">Sign in to continue to your business workspace.</p><div class="auth-tabs"><button id="signInTab" class="selected" type="button">Sign in</button><button id="signUpTab" type="button">Create account</button></div><label id="businessNameLabel" class="auth-optional">Business name<input id="businessName" type="text" maxlength="80" placeholder="Your business name"></label><label>Email<input id="loginEmail" type="email" required autocomplete="username" placeholder="you@business.com"></label><label>Password<input id="loginPassword" type="password" required minlength="8" autocomplete="current-password" placeholder="At least 8 characters"></label><button id="submitAuth" class="primary-button" type="submit">Sign in</button><button id="googleSignIn" class="google-button" type="button"><img src="assets/google-g.svg" alt="" aria-hidden="true"><span>Continue with Google</span></button><p id="authMessage" class="form-message" aria-live="polite"></p><small>Use your business account to securely access your workspace.</small></form></dialog>
+  <script src="config.js?v=2"></script><script src="frontend.js?v=16"></script>
+</body>
+</html>
+
+

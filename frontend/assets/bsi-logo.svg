@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title desc">
+  <title id="title">Brush painted dollar sign</title>
+  <desc id="desc">A black brush painted dollar sign with white ink streaks and a pen touching the upper curve.</desc>
+  <g fill="#000">
+    <path d="M83 34C72 25 51 26 41 38c-12 14-6 28 15 36l15 5c10 4 14 8 11 14-4 9-21 11-36 1l-8 12c17 12 43 11 55-2 13-14 7-31-15-39l-16-6c-10-4-13-8-9-13 4-6 17-7 28 1z"/>
+    <path d="m66 17 9 2-5 92-10 2z"/>
+    <path d="m80 40 27-29 13 13-29 28-12 5z"/>
+    <path d="m104 14 5-5c2-2 5-2 7 0l3 3c2 2 2 5 0 7l-5 5z"/>
+    <path d="m34 55 10-6-5 12zM85 88l12 2-11 8zM46 33l7-9-2 12z"/>
+  </g>
+  <g fill="none" stroke="#fff" stroke-linecap="round">
+    <path d="m50 39 8-4m-14 15 7-3m20 22 9 4m-28 22 9 3m7-73-2 15m-3 65-1 8" stroke-width="2.4"/>
+    <path d="m83 43 24-25m-25 31 4-4" stroke-width="1.8"/>
+  </g>
+</svg>
