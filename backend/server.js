@@ -12,8 +12,10 @@ const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', '
 
 app.use(cors()); app.use(express.json({ limit: '3mb' }));
 const frontendDir = path.join(__dirname, '..', 'frontend');
-app.get('/', (req, res) => res.sendFile(path.join(frontendDir, 'home.html')));
-app.use(express.static(frontendDir));
+if (!process.env.VERCEL) {
+  app.get('/', (req, res) => res.sendFile(path.join(frontendDir, 'home.html')));
+  app.use(express.static(frontendDir));
+}
 const email = value => String(value || '').trim().toLowerCase();
 const ready = (req, res, next) => supabase ? next() : res.status(503).json({ error: 'Database is not configured. Add SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY to backend/.env.' });
 function httpError(status, message) { const error = new Error(message); error.status = status; return error; }
@@ -278,4 +280,6 @@ app.get('/api/products', (req, res) => res.json({ products: [] }));
 app.get('/api/market-intelligence', (req, res) => res.json({ disclaimer: 'Comparison data must be anonymised and permission-controlled before release.', investors: [], shareholders: [], competitors: [], leaders: [] }));
 app.get('/api/billing', (req, res) => res.json({ plan: { name: 'SME Intelligence Pro', amount: 10, currency: 'USD', interval: 'month' }, checkoutEnabled: false, mpesaEnabled: false }));
 app.use('/api', (req, res) => res.status(404).json({ error: `API route ${req.method} ${req.path} was not found. Restart the backend to load the latest routes.` }));
-app.listen(PORT, () => console.log(`SME Intelligence Platform running at http://localhost:${PORT}`));
+if (require.main === module) app.listen(PORT, () => console.log(`SME Intelligence Platform running at http://localhost:${PORT}`));
+
+module.exports = app;

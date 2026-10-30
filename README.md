@@ -19,28 +19,26 @@ npm start
 
 Open `http://localhost:3001` for the public directory. Business owners can open the business workspace after signing in.
 
-## Deploy on Railway
+## Deploy on Vercel
 
-Deploy the repository root as one service. The root `Dockerfile` installs the backend dependencies and includes both `backend/` and `frontend/`, so Express can serve the website and API from the same Railway domain.
+Deploy the repository root. Vercel runs the Express app as a function and serves the copied frontend files from `public/` through its static file hosting.
 
-1. Push the project files to the GitHub repository connected to Railway, then create a Railway project from that repository.
-2. In the Railway service Variables tab, add `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY`, and `SUPABASE_SERVICE_ROLE_KEY`. Keep the service-role key only in Railway variables. Add the optional Stripe and M-Pesa variables from `backend/.env.example` only if you configure those payment features.
-3. Generate a public domain in the service's Networking settings and set the Railway healthcheck path to `/api/health`.
-4. In Supabase Auth → URL Configuration, allow `https://YOUR-RAILWAY-DOMAIN/home.html` as a redirect URL. In Google Cloud Console, keep the Supabase Auth callback URL as the authorized redirect URI; Google redirects to Supabase, and Supabase returns users to the Railway app.
+1. Push the project files to GitHub and import the repository in Vercel. Keep the project root as the Root Directory.
+2. In Vercel Project Settings → Environment Variables, add `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY`, and `SUPABASE_SERVICE_ROLE_KEY`. Keep the service-role key on the server; never add it to frontend code. Add optional Stripe and M-Pesa variables from `backend/.env.example` only if you configure those payment features.
+3. Deploy, then check `https://YOUR-VERCEL-DOMAIN/api/health` for the app health response.
+4. In Supabase Auth → URL Configuration, allow `https://YOUR-VERCEL-DOMAIN/home.html` as a redirect URL. In Google Cloud Console, keep the Supabase Auth callback URL as the authorized redirect URI; Google redirects to Supabase, and Supabase returns users to the Vercel app.
 
-Railway automatically builds the root `Dockerfile`; it supplies the listening `PORT` at runtime. See [Railway's Express deployment guide](https://docs.railway.com/guides/express), [Dockerfile guide](https://docs.railway.com/builds/dockerfiles), and [variables guide](https://docs.railway.com/variables).
+The root `vercel.json` selects the Express framework and runs `npm run build`, which copies the frontend into Vercel's `public/` directory. See [Vercel's Express deployment guide](https://vercel.com/docs/frameworks/backend/express), [project configuration](https://vercel.com/docs/project-configuration/vercel-json), and [environment variables guide](https://vercel.com/docs/projects/environment-variables).
 
-For global access, deploy the backend and frontend to a public HTTPS host. The easiest setup is to host this Express app as one service so the API and pages share the same domain. If the frontend is hosted separately, set `window.BSI_API_URL` in `frontend/config.js` to the backend's public HTTPS URL before deploying. A `localhost` address only works on the computer running the app.
-
-Before starting, create a Supabase project, run `backend/supabase/schema.sql` in its SQL Editor, copy `.env.example` to `.env`, and set `SUPABASE_URL` plus the server-only `SUPABASE_SERVICE_ROLE_KEY`. Re-run the schema after updates to add the public listing and share request tables. Never place the service-role key in the frontend or commit it.
+For local setup, create a Supabase project, run `backend/supabase/schema.sql` in its SQL Editor, and copy `backend/.env.example` to `backend/.env`. Set `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY`, and the server-only `SUPABASE_SERVICE_ROLE_KEY`. Re-run the schema after updates to add the public listing and share request tables. Never place the service-role key in the frontend or commit it.
 
 ## Google sign-in setup
 
 1. In Google Cloud Console, create an OAuth client ID for a Web application and add the Supabase callback URL shown in Supabase Auth → Providers → Google as an authorized redirect URI.
 2. Enable Google in Supabase Auth → Providers → Google and enter the Google client ID and client secret.
-3. In Supabase Auth → URL Configuration, allow the app callback `http://localhost:3001/home.html` as a redirect URL. Add your deployed app URL there when deploying.
+3. In Supabase Auth → URL Configuration, allow `http://localhost:3001/home.html` and `https://YOUR-VERCEL-DOMAIN/home.html` as redirect URLs.
 4. Set `SUPABASE_PUBLISHABLE_KEY` in `backend/.env` to the project's publishable key (`sb_publishable_...`). Keep `SUPABASE_SERVICE_ROLE_KEY` server-side only.
-5. Start the app at `http://localhost:3001` and choose Business or Investor before selecting Continue with Google.
+5. Start the app locally at `http://localhost:3001`, or use your Vercel domain, then select Continue with Google.
 
 Supabase's Google provider guide: https://supabase.com/docs/guides/auth/social-login/auth-google. Redirect URL configuration: https://supabase.com/docs/guides/auth/redirect-urls.
 
