@@ -6,6 +6,4 @@ tmp/
 *.log
 .DS_Store
 .vercel/
-.wrangler/
-.dev.vars
 public/
